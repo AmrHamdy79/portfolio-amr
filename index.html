@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Amr Elsebai · AI Developer & Verification Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #050810;
+    --surface: #0b1120;
+    --surface2: #101828;
+    --surface3: #141f30;
+    --accent: #00d4ff;
+    --accent2: #7c3aed;
+    --accent3: #f59e0b;
+    --green: #10b981;
+    --rose: #f43f5e;
+    --text: #dde4f0;
+    --muted: #5a7090;
+    --muted2: #7a90a8;
+    --border: rgba(0,212,255,0.08);
+    --border2: rgba(255,255,255,0.05);
+    --glow: 0 0 30px rgba(0,212,255,0.12);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* ── CUSTOM CURSOR ── */
+  .cursor { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999; mix-blend-mode: screen; }
+  .cursor-ring { width: 32px; height: 32px; border: 1px solid rgba(0,212,255,0.5); border-radius: 50%; position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9998; transition: width 0.2s, height 0.2s, opacity 0.2s; }
+
+  /* ── BACKGROUND ── */
+  body::after {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,255,0.018) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.018) 1px, transparent 1px);
+    background-size: 72px 72px;
+    pointer-events: none; z-index: 0;
+  }
+  .bg-orb {
+    position: fixed; border-radius: 50%; pointer-events: none; z-index: 0; filter: blur(120px);
+  }
+  .bg-orb-1 { width: 600px; height: 600px; background: radial-gradient(circle, rgba(124,58,237,0.07) 0%, transparent 70%); top: -200px; right: -100px; }
+  .bg-orb-2 { width: 400px; height: 400px; background: radial-gradient(circle, rgba(0,212,255,0.05) 0%, transparent 70%); bottom: 200px; left: -100px; }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; width: 100%; z-index: 500;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1rem 3rem;
+    background: rgba(5,8,16,0.88); backdrop-filter: blur(24px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1rem;
+    color: var(--accent); letter-spacing: 0.05em;
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .nav-logo::before {
+    content: ''; width: 8px; height: 8px;
+    background: var(--accent); border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a {
+    color: var(--muted); text-decoration: none; font-size: 0.72rem;
+    letter-spacing: 0.12em; text-transform: uppercase; transition: color 0.2s;
+    font-family: 'Space Mono', monospace;
+  }
+  .nav-links a:hover { color: var(--accent); }
+  .nav-cta {
+    padding: 0.5rem 1.4rem; background: transparent;
+    border: 1px solid var(--accent); color: var(--accent);
+    font-family: 'Space Mono', monospace; font-size: 0.65rem;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    text-decoration: none; transition: all 0.2s;
+    clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px));
+  }
+  .nav-cta:hover { background: var(--accent); color: var(--bg); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh; display: flex; align-items: center;
+    padding: 7rem 3rem 4rem; position: relative; z-index: 1;
+    max-width: 1400px; margin: 0 auto; gap: 4rem;
+  }
+  .hero-left { flex: 1; }
+  .hero-right { flex: 0 0 300px; display: none; flex-direction: column; gap: 0.85rem; }
+  @media(min-width: 1000px) { .hero-right { display: flex; } }
+
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: rgba(16,185,129,0.07); border: 1px solid rgba(16,185,129,0.18);
+    padding: 0.35rem 1rem; font-size: 0.65rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--green); margin-bottom: 1.8rem;
+    animation: fadeUp 0.7s ease both; font-family: 'Space Mono', monospace;
+  }
+  .hero-tag::before { content: ''; width: 6px; height: 6px; background: var(--green); border-radius: 50%; animation: pulse 2s infinite; }
+
+  .hero-name {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: clamp(3.5rem, 8vw, 6.5rem); line-height: 0.9;
+    letter-spacing: -0.04em; color: #fff;
+    animation: fadeUp 0.7s 0.1s ease both; margin-bottom: 0.7rem;
+  }
+  .hero-name em { color: var(--accent); font-family: 'Instrument Serif', serif; font-style: italic; display: block; }
+
+  .hero-roles {
+    display: flex; flex-wrap: wrap; gap: 0.5rem;
+    margin-bottom: 1.5rem; animation: fadeUp 0.7s 0.2s ease both;
+  }
+  .role-badge {
+    font-family: 'Space Mono', monospace; font-size: 0.62rem;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 0.28rem 0.8rem; border: 1px solid var(--border);
+    color: var(--muted2); background: var(--surface);
+  }
+  .role-badge.primary { border-color: rgba(0,212,255,0.3); color: var(--accent); background: rgba(0,212,255,0.05); }
+
+  .hero-desc {
+    font-size: 0.9rem; line-height: 1.9; color: #7a90a8;
+    max-width: 540px; margin-bottom: 2.5rem;
+    animation: fadeUp 0.7s 0.3s ease both;
+  }
+  .hero-desc strong { color: var(--text); font-weight: 500; }
+
+  .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; animation: fadeUp 0.7s 0.4s ease both; }
+  .btn {
+    padding: 0.8rem 1.8rem; font-family: 'Space Mono', monospace;
+    font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase;
+    text-decoration: none; display: inline-flex; align-items: center;
+    gap: 0.5rem; transition: all 0.22s;
+  }
+  .btn-primary {
+    background: var(--accent); color: var(--bg); font-weight: 700;
+    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+  }
+  .btn-primary:hover { background: #fff; transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,212,255,0.3); }
+  .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border2); }
+  .btn-outline:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+
+  /* Hero stat cards */
+  .stat-mini {
+    background: var(--surface); border: 1px solid var(--border2);
+    padding: 1.2rem 1.4rem; animation: fadeUp 0.7s ease both;
+    position: relative; overflow: hidden;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+  .stat-mini:hover { border-color: rgba(0,212,255,0.2); box-shadow: var(--glow); }
+  .stat-mini::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .stat-mini:hover::before { opacity: 1; }
+  .stat-mini:nth-child(1) { animation-delay: 0.5s; }
+  .stat-mini:nth-child(2) { animation-delay: 0.6s; }
+  .stat-mini:nth-child(3) { animation-delay: 0.7s; }
+  .stat-mini:nth-child(4) { animation-delay: 0.8s; }
+  .stat-mini-num { font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; color: var(--accent); line-height: 1; }
+  .stat-mini-label { font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-top: 0.3rem; font-family: 'Space Mono', monospace; }
+
+  /* ── DIVIDER ── */
+  .divider { height: 1px; background: var(--border2); max-width: 1400px; margin: 0 auto; position: relative; z-index: 1; }
+
+  /* ── SECTION ── */
+  section { position: relative; z-index: 1; }
+  .section-wrap { max-width: 1400px; margin: 0 auto; padding: 6rem 3rem; }
+  .section-label {
+    font-size: 0.6rem; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 0.8rem;
+    display: flex; align-items: center; gap: 0.75rem;
+    font-family: 'Space Mono', monospace;
+  }
+  .section-label::before { content: ''; width: 24px; height: 1px; background: var(--accent); }
+  .section-title {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: clamp(2rem, 4vw, 3rem); line-height: 1;
+    letter-spacing: -0.03em; margin-bottom: 3rem; color: #fff;
+  }
+
+  /* ── REVEAL ── */
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .reveal.visible { opacity: 1; transform: none; }
+
+  /* ── PROFILE BANNER ── */
+  .profile-banner {
+    background: linear-gradient(135deg, var(--surface), var(--surface2));
+    border: 1px solid var(--border2); padding: 2.5rem 3rem;
+    margin-bottom: 4rem; position: relative; overflow: hidden;
+  }
+  .profile-banner::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--accent2), var(--accent), var(--green));
+  }
+  .profile-banner p { font-size: 0.9rem; line-height: 1.95; color: var(--muted2); max-width: 900px; }
+  .profile-banner p strong { color: var(--text); font-weight: 500; }
+
+  /* ── SKILLS ── */
+  .skills-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1px; background: var(--border2); border: 1px solid var(--border2);
+    margin-bottom: 4rem;
+  }
+  .skill-card {
+    background: var(--bg); padding: 1.8rem 2rem;
+    transition: background 0.3s; position: relative; overflow: hidden;
+  }
+  .skill-card:hover { background: var(--surface); }
+  .skill-card::after {
+    content: ''; position: absolute; top: 0; left: 0;
+    width: 2px; height: 0; background: var(--accent); transition: height 0.35s;
+  }
+  .skill-card:hover::after { height: 100%; }
+  .skill-icon { font-size: 1.5rem; margin-bottom: 0.8rem; }
+  .skill-name { font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 700; color: #fff; margin-bottom: 0.45rem; }
+  .skill-desc { font-size: 0.78rem; line-height: 1.8; color: var(--muted); margin-bottom: 0.8rem; }
+  .skill-tags { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+  .tag {
+    font-size: 0.56rem; letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 0.18rem 0.55rem; border: 1px solid var(--border);
+    color: var(--muted); font-family: 'Space Mono', monospace;
+  }
+
+  /* Skills table */
+  .skills-table-wrap { background: var(--surface); border: 1px solid var(--border2); overflow: hidden; }
+  .skills-table { width: 100%; border-collapse: collapse; }
+  .skills-table tr { border-bottom: 1px solid var(--border2); transition: background 0.2s; }
+  .skills-table tr:last-child { border-bottom: none; }
+  .skills-table tr:hover { background: var(--surface2); }
+  .skills-table td { padding: 1.1rem 1.5rem; font-size: 0.78rem; vertical-align: top; }
+  .skills-table td:first-child {
+    color: var(--accent); font-weight: 700; font-size: 0.65rem;
+    letter-spacing: 0.1em; text-transform: uppercase; width: 160px;
+    padding-right: 1rem; white-space: nowrap;
+    font-family: 'Space Mono', monospace;
+    border-right: 1px solid var(--border2);
+  }
+  .skills-table td:last-child { color: #8fa3ba; line-height: 1.75; }
+
+  /* ── PROJECTS ── */
+  .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 1.2rem; }
+  .project-card {
+    background: var(--surface); border: 1px solid var(--border2);
+    padding: 2rem; position: relative; overflow: hidden;
+    transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+    display: flex; flex-direction: column;
+  }
+  .project-card:hover { transform: translateY(-5px); border-color: rgba(0,212,255,0.2); box-shadow: 0 24px 60px rgba(0,0,0,0.45); }
+  .project-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--accent2), var(--accent));
+    transform: scaleX(0); transform-origin: left; transition: transform 0.35s;
+  }
+  .project-card:hover::before { transform: scaleX(1); }
+  .project-card.featured { background: linear-gradient(135deg, rgba(124,58,237,0.07), rgba(0,212,255,0.03)); border-color: rgba(124,58,237,0.18); }
+  .project-card.fpga { background: linear-gradient(135deg, rgba(16,185,129,0.06), var(--surface)); }
+  .project-card.fpga::before { background: linear-gradient(90deg, var(--green), var(--accent)); }
+  .project-card.embedded { background: linear-gradient(135deg, rgba(245,158,11,0.06), var(--surface)); }
+  .project-card.embedded::before { background: linear-gradient(90deg, var(--accent3), var(--rose)); }
+
+  .project-num { font-size: 0.57rem; color: var(--accent); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 0.7rem; font-family: 'Space Mono', monospace; }
+  .project-num.green { color: var(--green); }
+  .project-num.amber { color: var(--accent3); }
+  .project-title { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; color: #fff; margin-bottom: 0.65rem; line-height: 1.35; }
+  .project-desc { font-size: 0.77rem; line-height: 1.9; color: var(--muted); margin-bottom: 1.2rem; flex: 1; }
+  .project-tech { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: auto; }
+  .tech-badge {
+    font-size: 0.55rem; letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 0.22rem 0.65rem; background: rgba(0,212,255,0.04);
+    border: 1px solid rgba(0,212,255,0.1); color: var(--accent);
+    font-family: 'Space Mono', monospace;
+  }
+  .tech-badge.green { background: rgba(16,185,129,0.04); border-color: rgba(16,185,129,0.15); color: var(--green); }
+  .tech-badge.amber { background: rgba(245,158,11,0.04); border-color: rgba(245,158,11,0.15); color: var(--accent3); }
+  .featured-badge { position: absolute; top: 1rem; right: 1rem; font-size: 0.5rem; letter-spacing: 0.15em; text-transform: uppercase; padding: 0.2rem 0.6rem; background: var(--accent3); color: var(--bg); font-weight: 700; font-family: 'Space Mono', monospace; }
+
+  /* Project category headers */
+  .proj-category { 
+    grid-column: 1 / -1; 
+    display: flex; align-items: center; gap: 1rem;
+    margin-top: 1rem; padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border2);
+  }
+  .proj-category-label {
+    font-family: 'Space Mono', monospace; font-size: 0.62rem;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--muted); white-space: nowrap;
+  }
+  .proj-category-line { flex: 1; height: 1px; background: var(--border2); }
+
+  /* ── TIMELINE ── */
+  .timeline { border-left: 1px solid rgba(0,212,255,0.15); padding-left: 2rem; }
+  .tl-item { position: relative; margin-bottom: 2.5rem; }
+  .tl-item::before {
+    content: ''; position: absolute; left: -2.45rem; top: 0.45rem;
+    width: 8px; height: 8px; background: var(--accent); border-radius: 50%;
+    box-shadow: 0 0 16px var(--accent);
+  }
+  .tl-item.green::before { background: var(--green); box-shadow: 0 0 16px var(--green); }
+  .tl-item.amber::before { background: var(--accent3); box-shadow: 0 0 16px var(--accent3); }
+  .tl-period { font-size: 0.6rem; letter-spacing: 0.15em; color: var(--accent); margin-bottom: 0.3rem; text-transform: uppercase; font-family: 'Space Mono', monospace; }
+  .tl-item.green .tl-period { color: var(--green); }
+  .tl-item.amber .tl-period { color: var(--accent3); }
+  .tl-role { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; color: #fff; margin-bottom: 0.2rem; }
+  .tl-org { font-size: 0.76rem; color: var(--accent2); margin-bottom: 0.6rem; }
+  .tl-desc { font-size: 0.77rem; color: var(--muted); line-height: 1.8; }
+  .tl-bullets { list-style: none; margin-top: 0.5rem; }
+  .tl-bullets li { font-size: 0.76rem; color: var(--muted); line-height: 1.75; padding-left: 1.2rem; position: relative; margin-bottom: 0.2rem; }
+  .tl-bullets li::before { content: '→'; position: absolute; left: 0; color: var(--accent); font-size: 0.62rem; font-family: 'Space Mono', monospace; }
+
+  /* ── CERTS ── */
+  .cert-grid { display: grid; grid-template-columns: 1fr; gap: 0.65rem; }
+  .cert-item {
+    padding: 0.9rem 1.2rem; border: 1px solid var(--border2);
+    border-left: 3px solid var(--accent); background: var(--surface);
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .cert-item:hover { background: var(--surface2); border-left-color: var(--accent); }
+  .cert-item.purple { border-left-color: var(--accent2); }
+  .cert-item.purple:hover { border-left-color: var(--accent2); }
+  .cert-item.amber { border-left-color: var(--accent3); }
+  .cert-source { font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.25rem; font-family: 'Space Mono', monospace; }
+  .cert-item.purple .cert-source { color: var(--accent2); }
+  .cert-item.amber .cert-source { color: var(--accent3); }
+  .cert-name { font-family: 'Syne', sans-serif; font-size: 0.85rem; font-weight: 700; color: #fff; }
+
+  /* Language bars */
+  .lang-row { margin-bottom: 0.8rem; }
+  .lang-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem; }
+  .lang-name { font-family: 'Syne', sans-serif; font-size: 0.88rem; font-weight: 700; color: #fff; }
+  .lang-level { font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); font-family: 'Space Mono', monospace; }
+  .lang-bar { height: 2px; background: var(--border2); overflow: hidden; }
+  .lang-fill { height: 100%; background: linear-gradient(90deg, var(--accent2), var(--accent)); }
+
+  /* ── CONTACT ── */
+  .contact-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; }
+  @media(max-width: 768px) { .contact-layout { grid-template-columns: 1fr; gap: 2.5rem; } }
+  .contact-headline { font-family: 'Instrument Serif', serif; font-size: clamp(1.8rem, 3.5vw, 2.8rem); color: #fff; line-height: 1.3; margin-bottom: 1.2rem; }
+  .contact-sub { font-size: 0.82rem; color: var(--muted2); line-height: 1.9; max-width: 380px; }
+  .availability-chip {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: rgba(16,185,129,0.07); border: 1px solid rgba(16,185,129,0.2);
+    padding: 0.4rem 1rem; font-size: 0.6rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--green); margin-bottom: 1.2rem;
+    font-family: 'Space Mono', monospace;
+  }
+  .availability-chip::before { content: ''; width: 6px; height: 6px; background: var(--green); border-radius: 50%; animation: pulse 2s infinite; }
+  .contact-links { display: flex; flex-direction: column; gap: 0.7rem; }
+  .contact-link {
+    display: flex; align-items: center; gap: 1rem;
+    padding: 1rem 1.3rem; border: 1px solid var(--border2);
+    text-decoration: none; color: var(--text);
+    transition: all 0.22s; background: var(--surface);
+  }
+  .contact-link:hover { border-color: var(--accent); color: var(--accent); transform: translateX(5px); background: var(--surface2); }
+  .cl-icon { font-size: 1rem; width: 24px; text-align: center; flex-shrink: 0; }
+  .cl-label { font-size: 0.56rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); display: block; margin-bottom: 0.15rem; font-family: 'Space Mono', monospace; }
+  .cl-value { font-size: 0.8rem; }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border2); padding: 2rem 3rem;
+    display: flex; justify-content: space-between; align-items: center;
+    max-width: 1400px; margin: 0 auto; font-size: 0.68rem;
+    color: var(--muted); flex-wrap: wrap; gap: 1rem;
+    position: relative; z-index: 1; font-family: 'Space Mono', monospace;
+  }
+  footer a { color: var(--accent); text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.25; } }
+
+  /* ── MOBILE ── */
+  @media(max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links, .nav-cta { display: none; }
+    .hero { padding: 5rem 1.5rem 3rem; flex-direction: column; }
+    .section-wrap { padding: 4rem 1.5rem; }
+    .projects-grid { grid-template-columns: 1fr; }
+    .skills-grid { grid-template-columns: 1fr; }
+    .skills-table td:first-child { width: 100px; font-size: 0.58rem; }
+    footer { padding: 1.5rem; }
+    body { cursor: auto; }
+    .cursor, .cursor-ring { display: none; }
+    .profile-banner { padding: 1.5rem; }
+    .proj-category { grid-column: 1; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="bg-orb bg-orb-1"></div>
+<div class="bg-orb bg-orb-2"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">AMR.AI</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="mailto:mirohamdy03@gmail.com" class="nav-cta">Hire Me</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-left">
+    <div class="hero-tag">Open to · Verification Engineer · AI Developer · Software Engineer</div>
+    <h1 class="hero-name">Amr<em>Elsebai</em></h1>
+    <div class="hero-roles">
+      <span class="role-badge primary">AI Developer</span>
+      <span class="role-badge primary">Verification Engineer</span>
+      <span class="role-badge">LLM Specialist</span>
+      <span class="role-badge">Software Engineer</span>
+      <span class="role-badge">FPGA Engineer</span>
+    </div>
+    <p class="hero-desc">
+      <strong>Electronics & Communications Engineering student at Cairo University</strong> (3rd Year · 2022–2027).
+      Trained in <strong>SystemVerilog & UVM</strong> verification methodologies.
+      Building real-world AI systems — multilingual RAG pipelines, LLM apps, medical computer vision,
+      and hardware design tools. <strong>126h Generative AI internship</strong>. 12+ deployed projects.
+    </p>
+    <div class="hero-btns">
+      <a href="#projects" class="btn btn-primary">View Projects ↓</a>
+      <a href="https://github.com/AmrHamdy79" target="_blank" class="btn btn-outline">GitHub ↗</a>
+      <a href="mailto:mirohamdy03@gmail.com" class="btn btn-outline">Get in Touch</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="stat-mini">
+      <div class="stat-mini-num">12+</div>
+      <div class="stat-mini-label">Engineering Projects</div>
+    </div>
+    <div class="stat-mini">
+      <div class="stat-mini-num">6</div>
+      <div class="stat-mini-label">LLM Production Apps</div>
+    </div>
+    <div class="stat-mini">
+      <div class="stat-mini-num">126h</div>
+      <div class="stat-mini-label">Gen AI Internship</div>
+    </div>
+    <div class="stat-mini">
+      <div class="stat-mini-num">95%</div>
+      <div class="stat-mini-label">Medical AI Accuracy</div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ABOUT / PROFILE -->
+<section id="about">
+  <div class="section-wrap">
+    <div class="section-label reveal">Profile</div>
+    <h2 class="section-title reveal">Who I Am</h2>
+    <div class="profile-banner reveal">
+      <p>
+        Electronics & Communications Engineering student at <strong>Cairo University</strong> with solid hands-on experience in
+        <strong>digital design, RTL verification, and FPGA implementation</strong>.
+        Trained in <strong>SystemVerilog and UVM-based verification methodologies</strong>, with practical exposure to functional coverage,
+        constrained random stimulus, and SVA assertions. Complemented by a strong <strong>software and AI background</strong> — including
+        LLM-powered tools, RAG pipelines, and embedded systems — which enables a deeper understanding of design intent and system behavior.
+        Seeking a <strong>Verification Engineer role</strong> where technical depth in digital verification can be combined with AI knowledge
+        to deliver thorough, intelligent verification solutions.
+      </p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-wrap">
+    <div class="section-label reveal">Expertise</div>
+    <h2 class="section-title reveal">What I Build With</h2>
+
+    <div class="skills-grid reveal">
+      <div class="skill-card">
+        <div class="skill-icon">🧠</div>
+        <div class="skill-name">AI / Machine Learning</div>
+        <div class="skill-desc">LLMs, RAG pipelines, CNNs, predictive modeling, medical image analysis, NLP, and model accuracy evaluation.</div>
+        <div class="skill-tags">
+          <span class="tag">LangChain</span><span class="tag">Hugging Face</span><span class="tag">Qwen2.5</span><span class="tag">Mistral-7B</span><span class="tag">BART</span><span class="tag">Whisper</span><span class="tag">FAISS</span><span class="tag">ChromaDB</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-icon">✅</div>
+        <div class="skill-name">Digital Verification</div>
+        <div class="skill-desc">Full UVM-based verification environments, constrained random stimulus, functional coverage modeling, SystemVerilog assertions — SPI, FIFO, and more.</div>
+        <div class="skill-tags">
+          <span class="tag">SystemVerilog</span><span class="tag">UVM</span><span class="tag">SVA</span><span class="tag">Functional Coverage</span><span class="tag">TLM</span><span class="tag">QuestaSim</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-icon">🔷</div>
+        <div class="skill-name">Digital Design & FPGA</div>
+        <div class="skill-desc">RTL design, FPGA flow with Vivado, static timing analysis, clock domain crossing, formal verification with Questa tools.</div>
+        <div class="skill-tags">
+          <span class="tag">Verilog HDL</span><span class="tag">Vivado</span><span class="tag">QuestaSim</span><span class="tag">RTL Synthesis</span><span class="tag">STA</span><span class="tag">CDC/RDC</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-icon">⚡</div>
+        <div class="skill-name">Full-Stack AI Apps</div>
+        <div class="skill-desc">End-to-end AI applications with REST APIs, real-time streaming, GPU optimization via Kaggle/ngrok, and polished UIs.</div>
+        <div class="skill-tags">
+          <span class="tag">Flask</span><span class="tag">FastAPI</span><span class="tag">Streamlit</span><span class="tag">React</span><span class="tag">ngrok</span><span class="tag">REST APIs</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-icon">💻</div>
+        <div class="skill-name">Programming Languages</div>
+        <div class="skill-desc">Strong software engineering foundation with OOP, design patterns, memory management, testing, and secure coding practices.</div>
+        <div class="skill-tags">
+          <span class="tag">Python</span><span class="tag">C++ OOP/STL</span><span class="tag">C</span><span class="tag">JavaScript</span><span class="tag">Java</span><span class="tag">SQL</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-icon">🔧</div>
+        <div class="skill-name">Embedded & Hardware</div>
+        <div class="skill-desc">FreeRTOS, ESP32, PCB design, Cadence analog design, power electronics, MIMO, 5G core, and antenna design.</div>
+        <div class="skill-tags">
+          <span class="tag">FreeRTOS</span><span class="tag">ESP32</span><span class="tag">Embedded C</span><span class="tag">Cadence</span><span class="tag">Altium</span><span class="tag">MATLAB</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Full skill breakdown -->
+    <div class="reveal">
+      <div class="section-label" style="margin-bottom: 1.5rem;">Full Skill Breakdown</div>
+      <div class="skills-table-wrap">
+        <table class="skills-table">
+          <tr><td>AI / ML</td><td>Machine Learning, Deep Learning, CNNs, LLMs, RAG, Predictive Modeling, Medical Image Analysis, NLP, Transformers (BART, Qwen, Mistral), Vector Databases (FAISS, ChromaDB), LangChain, Hugging Face</td></tr>
+          <tr><td>Languages</td><td>Python (primary), C++ (OOP, STL, Design Patterns), C, JavaScript (basics), Java (basics), C# (basics), SQL / SQLite</td></tr>
+          <tr><td>Web / APIs</td><td>Flask, FastAPI, Streamlit, React, REST APIs, ngrok tunneling, HTML/CSS</td></tr>
+          <tr><td>Digital Design</td><td>Verilog HDL, FPGA Design Flow (Vivado, IP Catalog, Debug Cores), RTL Synthesis, Static Timing Analysis, Clock Domain Crossing, Formal Verification (Questa Lint / CDC / RDC), Low Power Design</td></tr>
+          <tr><td>Verification</td><td>SystemVerilog (Datatypes, Interfaces, Threading), UVM (Components, Sequences, TLM, Factory, Phasing), Functional Coverage Modeling, Constrained Random Stimulus, SVA Assertions, Verification Planning, RTL Coverage Analysis</td></tr>
+          <tr><td>Embedded / HW</td><td>FreeRTOS, ESP32, Embedded C, Analog Design (Cadence Virtuoso), Power Electronics, MIMO, 5G Core, Antenna Design</td></tr>
+          <tr><td>Tools & IDEs</td><td>Visual Studio, Qt, Vivado, QuestaSim, MATLAB, Altium Designer, Proteus, MULTISIM, CST, Altair FEKO, Cadence, ModelSim, Eclipse</td></tr>
+          <tr><td>Dev Practices</td><td>Git, GitHub, GitHub Actions (CI/CD), Google Test (TDD), Secure Coding, Packaging & Deployment, Docker basics</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-wrap">
+    <div class="section-label reveal">Portfolio</div>
+    <h2 class="section-title reveal">Engineering & AI Projects</h2>
+
+    <div class="projects-grid reveal">
+
+      <!-- AI / ML Projects -->
+      <div class="proj-category">
+        <span class="proj-category-label">AI & Machine Learning</span>
+        <div class="proj-category-line"></div>
+      </div>
+
+      <div class="project-card featured">
+        <div class="featured-badge">⭐ Featured</div>
+        <div class="project-num">01 · AI Model Development</div>
+        <div class="project-title">AI Cancer Treatment Prediction & Medical Image Analysis</div>
+        <div class="project-desc">AI model predicting chemotherapy response, analyzing CT/MRI scans via CNNs, calculating optimal dosages, and monitoring disease progression. Achieves <strong style="color:var(--text)">80–95% accuracy</strong> with imaging, 70–85% with clinical data alone. Recognized by Dr. Ahmed AbdelWahid, Zagazig University Faculty of Medicine.</div>
+        <div class="project-tech">
+          <span class="tech-badge">Python</span><span class="tech-badge">CNN</span><span class="tech-badge">Deep Learning</span><span class="tech-badge">TensorFlow</span><span class="tech-badge">Medical Imaging</span>
+        </div>
+      </div>
+
+      <div class="project-card featured">
+        <div class="featured-badge">⭐ Featured</div>
+        <div class="project-num">02 · Internship · RAG · Multilingual</div>
+        <div class="project-title">Multilingual RAG Document Intelligence System</div>
+        <div class="project-desc">Full-stack RAG system supporting Arabic & English documents. Features automatic language detection, RTL-adaptive UI, semantic search across multiple PDFs, Google Drive links, and web URLs. 100% local processing, GPU acceleration supported.</div>
+        <div class="project-tech">
+          <span class="tech-badge">React</span><span class="tech-badge">Flask</span><span class="tech-badge">FAISS</span><span class="tech-badge">Qwen2.5</span><span class="tech-badge">LangChain</span><span class="tech-badge">Arabic NLP</span>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-num">03 · Internship · Gen AI</div>
+        <div class="project-title">AI Video Summarization Tool</div>
+        <div class="project-desc">Web app that downloads YouTube audio, transcribes with Faster-Whisper, summarizes using Facebook's BART transformer, and exports professionally formatted PDF reports. Features real-time progress tracking via multi-threading.</div>
+        <div class="project-tech">
+          <span class="tech-badge">Flask</span><span class="tech-badge">Faster-Whisper</span><span class="tech-badge">BART</span><span class="tech-badge">PyTorch</span><span class="tech-badge">yt-dlp</span><span class="tech-badge">ReportLab</span>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-num">04 · Internship · LLM</div>
+        <div class="project-title">AI CV Intelligence & Structured Data Extraction</div>
+        <div class="project-desc">LLM-powered CV parser that transforms any PDF resume into structured JSON. No regex, no templates — the model reads and understands. Extracts name, email, education, skills, and experience. Remote GPU inference via ngrok tunnel to Kaggle.</div>
+        <div class="project-tech">
+          <span class="tech-badge">Streamlit</span><span class="tech-badge">FastAPI</span><span class="tech-badge">Qwen2.5-3B-Instruct</span><span class="tech-badge">LangChain</span><span class="tech-badge">ngrok</span>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-num">05 · Internship · Final Project</div>
+        <div class="project-title">AI Business Model Generator</div>
+        <div class="project-desc">Transforms business documents (PDF/Excel/Word) into a complete strategy: Business Model Canvas (9 sections), full business plan, AI-prioritized recommendations, step-by-step action plan. 8-bit quantized Mistral-7B on Kaggle T4 GPU.</div>
+        <div class="project-tech">
+          <span class="tech-badge">Streamlit</span><span class="tech-badge">Mistral-7B</span><span class="tech-badge">ChromaDB</span><span class="tech-badge">LangChain</span><span class="tech-badge">sentence-transformers</span>
+        </div>
+      </div>
+
+      <!-- Hardware AI -->
+      <div class="proj-category">
+        <span class="proj-category-label">Hardware AI & RTL Design</span>
+        <div class="proj-category-line"></div>
+      </div>
+
+      <div class="project-card fpga">
+        <div class="project-num green">06 · Internship · Hardware AI</div>
+        <div class="project-title">Verilog RTL Design Assistant with Self-Correction Pipeline</div>
+        <div class="project-desc">LLM-backed tool for synthesizable Verilog-2001 RTL generation. Includes static RTL rules enforcer and automated compile-time feedback loop via Icarus Verilog — correcting LLM errors before the user sees them. Knowledge base from 3 RTL textbooks.</div>
+        <div class="project-tech">
+          <span class="tech-badge green">Mistral-Nemo</span><span class="tech-badge green">FastAPI</span><span class="tech-badge green">Streamlit</span><span class="tech-badge green">Icarus Verilog</span><span class="tech-badge green">ngrok</span>
+        </div>
+      </div>
+
+      <div class="project-card fpga">
+        <div class="project-num green">07 · Digital Design · FPGA</div>
+        <div class="project-title">DSP48A1 Slice on Spartan-6 FPGA</div>
+        <div class="project-desc">Complete FPGA design flow: RTL coding, synthesis, implementation, and post-implementation verification of the DSP48A1 arithmetic slice on Spartan-6. Debug core integration with Vivado.</div>
+        <div class="project-tech">
+          <span class="tech-badge green">Verilog HDL</span><span class="tech-badge green">Vivado</span><span class="tech-badge green">QuestaSim</span><span class="tech-badge green">FPGA</span>
+        </div>
+      </div>
+
+      <div class="project-card fpga">
+        <div class="project-num green">08 · Digital Verification · UVM</div>
+        <div class="project-title">End-to-End UVM Verification of SPI Communication System</div>
+        <div class="project-desc">Complete UVM verification environment for SPI protocol. Developed verification plan, functional coverage model, constrained random stimulus, and SystemVerilog assertions. Includes SPI Slave with FSM and Single Port RAM integration.</div>
+        <div class="project-tech">
+          <span class="tech-badge green">SystemVerilog</span><span class="tech-badge green">UVM</span><span class="tech-badge green">QuestaSim</span><span class="tech-badge green">SVA</span><span class="tech-badge green">FSM</span>
+        </div>
+      </div>
+
+      <div class="project-card fpga">
+        <div class="project-num green">09 · Digital Verification · FIFO</div>
+        <div class="project-title">Synchronous FIFO Verification</div>
+        <div class="project-desc">Verified a synchronous FIFO design using SystemVerilog with constrained random stimulus, SVA assertions, and a functional coverage model. Achieved thorough corner-case coverage and validated correct read/write behavior.</div>
+        <div class="project-tech">
+          <span class="tech-badge green">SystemVerilog</span><span class="tech-badge green">Functional Coverage</span><span class="tech-badge green">SVA</span><span class="tech-badge green">QuestaSim</span>
+        </div>
+      </div>
+
+      <!-- Embedded Systems -->
+      <div class="proj-category">
+        <span class="proj-category-label">Embedded & IoT Systems</span>
+        <div class="proj-category-line"></div>
+      </div>
+
+      <div class="project-card embedded">
+        <div class="project-num amber">10 · Embedded Systems · FreeRTOS</div>
+        <div class="project-title">FreeRTOS Reliable Data Communication Simulation</div>
+        <div class="project-desc">Simulated Send-and-Wait and Go-Back-N protocols using FreeRTOS queues, timers, and semaphores. Compares throughput, reliability, and efficiency of both protocols over unreliable networks.</div>
+        <div class="project-tech">
+          <span class="tech-badge amber">FreeRTOS</span><span class="tech-badge amber">C</span><span class="tech-badge amber">Embedded Systems</span><span class="tech-badge amber">Protocol Design</span>
+        </div>
+      </div>
+
+      <div class="project-card embedded">
+        <div class="project-num amber">11 · IoT · ESP32</div>
+        <div class="project-title">Smart Lake Monitoring Communication System</div>
+        <div class="project-desc">Dual-node water level monitoring using ESP32 microcontrollers and custom-designed PCBs. Responsible for the full communication layer between nodes and the cloud server for real-time environmental data.</div>
+        <div class="project-tech">
+          <span class="tech-badge amber">ESP32</span><span class="tech-badge amber">PCB Design</span><span class="tech-badge amber">Cloud</span><span class="tech-badge amber">Embedded C</span><span class="tech-badge amber">IoT</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="section-wrap">
+    <div class="section-label reveal">Background</div>
+    <h2 class="section-title reveal">Education & Experience</h2>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 4rem; align-items: start;" class="reveal">
+
+      <!-- Timeline -->
+      <div>
+        <div class="section-label" style="margin-bottom: 2rem;">Career Timeline</div>
+        <div class="timeline">
+          <div class="tl-item">
+            <div class="tl-period">2022 → 2027</div>
+            <div class="tl-role">B.Sc. Electronics & Electrical Communication Engineering</div>
+            <div class="tl-org">Cairo University, Faculty of Engineering · 3rd Year Student</div>
+            <div class="tl-desc">Deep focus on AI, digital design & verification, signal processing, embedded systems, analog design (Cadence), MIMO, 5G, and antenna systems.</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-period">Dec 2025 – Feb 2026</div>
+            <div class="tl-role">Generative AI Intern</div>
+            <div class="tl-org">Tips Hindawi · Generative AI Internship Program · 126 Hours</div>
+            <ul class="tl-bullets">
+              <li>Delivered 6 production-grade AI projects end-to-end</li>
+              <li>Built LLM apps using Mistral-7B, Qwen2.5, BART, and Whisper</li>
+              <li>Designed RAG pipelines with LangChain, FAISS, and ChromaDB</li>
+              <li>Deployed GPU inference (Kaggle T4) via FastAPI + ngrok</li>
+              <li>Built full-stack apps: Streamlit, Flask, and React frontends</li>
+            </ul>
+          </div>
+          <div class="tl-item amber">
+            <div class="tl-period">Aug 2022 – Jun 2023</div>
+            <div class="tl-role">Private Mathematics Tutor</div>
+            <div class="tl-org">Self-Employed</div>
+            <div class="tl-desc">One-on-one math tutoring for high school students. Improved performance, comprehension, and built strong communication skills.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Certs + Languages -->
+      <div>
+        <div class="section-label" style="margin-bottom: 1.5rem;">Certifications & Training</div>
+        <div class="cert-grid">
+          <div class="cert-item">
+            <div class="cert-source">Coursera / DeepLearning.AI</div>
+            <div class="cert-name">Machine Learning & Deep Learning Specialization</div>
+          </div>
+          <div class="cert-item">
+            <div class="cert-source">Udacity</div>
+            <div class="cert-name">AI Programming with Python</div>
+          </div>
+          <div class="cert-item purple">
+            <div class="cert-source">Intensive Training · 6 Weeks</div>
+            <div class="cert-name">Digital Design — Verilog HDL & FPGA Flow with Vivado</div>
+          </div>
+          <div class="cert-item purple">
+            <div class="cert-source">Intensive Training · 6 Weeks</div>
+            <div class="cert-name">Digital Verification — SystemVerilog & UVM</div>
+          </div>
+        </div>
+
+        <div class="section-label" style="margin-top: 2.5rem; margin-bottom: 1.5rem;">Languages</div>
+        <div style="display: flex; flex-direction: column; gap: 1rem;">
+          <div class="lang-row">
+            <div class="lang-header">
+              <span class="lang-name">Arabic</span>
+              <span class="lang-level">Native</span>
+            </div>
+            <div class="lang-bar"><div class="lang-fill" style="width:100%"></div></div>
+          </div>
+          <div class="lang-row">
+            <div class="lang-header">
+              <span class="lang-name">English</span>
+              <span class="lang-level">Fluent</span>
+            </div>
+            <div class="lang-bar"><div class="lang-fill" style="width:85%"></div></div>
+          </div>
+          <div class="lang-row">
+            <div class="lang-header">
+              <span class="lang-name">French</span>
+              <span class="lang-level">A2 — Elementary</span>
+            </div>
+            <div class="lang-bar"><div class="lang-fill" style="width:25%; background: linear-gradient(90deg, var(--accent3), var(--rose));"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-wrap">
+    <div class="section-label reveal">Let's Connect</div>
+    <div class="contact-layout reveal">
+      <div>
+        <div class="availability-chip">Available for new opportunities</div>
+        <p class="contact-headline">Ready to build something intelligent together?</p>
+        <p class="contact-sub">I'm actively seeking <strong>Verification Engineer</strong>, AI Developer, and Software Engineer roles. Whether it's UVM verification environments, LLM applications, RAG systems, computer vision, or full-stack AI — let's talk.</p>
+      </div>
+      <div class="contact-links">
+        <a href="mailto:mirohamdy03@gmail.com" class="contact-link">
+          <span class="cl-icon">✉</span>
+          <div><span class="cl-label">Email</span><span class="cl-value">mirohamdy03@gmail.com</span></div>
+        </a>
+        <a href="https://www.linkedin.com/in/amr-elsebai-0a781b27b" target="_blank" class="contact-link">
+          <span class="cl-icon">in</span>
+          <div><span class="cl-label">LinkedIn</span><span class="cl-value">linkedin.com/in/amr-elsebai-0a781b27b</span></div>
+        </a>
+        <a href="https://github.com/AmrHamdy79" target="_blank" class="contact-link">
+          <span class="cl-icon">⌥</span>
+          <div><span class="cl-label">GitHub</span><span class="cl-value">github.com/AmrHamdy79</span></div>
+        </a>
+        <a href="tel:+201015558152" class="contact-link">
+          <span class="cl-icon">📱</span>
+          <div><span class="cl-label">Phone</span><span class="cl-value">+20 1015558152</span></div>
+        </a>
+        <div class="contact-link" style="cursor:default; opacity:0.7;">
+          <span class="cl-icon">📍</span>
+          <div><span class="cl-label">Location</span><span class="cl-value">Qalyub, Egypt</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>© 2026 Amr Elsebai · AI Developer & Verification Engineer</span>
+  <span>Cairo University · EECE 2027 🇪🇬</span>
+  <span>Built with precision — <a href="mailto:mirohamdy03@gmail.com">hire me</a></span>
+</footer>
+
+<script>
+  // Cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.transform = `translate(${mx - 4}px, ${my - 4}px)`;
+  });
+  function animRing() {
+    rx += (mx - rx) * 0.11; ry += (my - ry) * 0.11;
+    ring.style.transform = `translate(${rx - 16}px, ${ry - 16}px)`;
+    requestAnimationFrame(animRing);
+  }
+  animRing();
+  document.querySelectorAll('a, .project-card, .skill-card, .contact-link, .stat-mini').forEach(el => {
+    el.addEventListener('mouseenter', () => { ring.style.width = '54px'; ring.style.height = '54px'; ring.style.borderColor = 'rgba(0,212,255,0.8)'; });
+    el.addEventListener('mouseleave', () => { ring.style.width = '32px'; ring.style.height = '32px'; ring.style.borderColor = 'rgba(0,212,255,0.5)'; });
+  });
+
+  // Scroll reveal
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+    });
+  }, { threshold: 0.07 });
+  document.querySelectorAll('.reveal').forEach(r => observer.observe(r));
+
+  // Stagger project cards
+  document.querySelectorAll('.project-card').forEach((card, i) => {
+    card.style.transitionDelay = `${(i % 3) * 0.06}s`;
+  });
+</script>
+</body>
+</html>
